@@ -39,3 +39,4 @@ The chemistry engine in `src/chemistryEngine.js` is intentionally a small set of
 4. Add tests for every supported reaction rule.
 5. Add guided steps, accessibility review, and teacher/learner roles.
 6. Consider 3D molecular views after the 2D interactions are stable.
+# ChemLab
