@@ -1,5 +1,12 @@
 // Educational rules for this prototype only. This is not a general chemistry solver.
-export function simulate({ experiment, first, second, indicatorAdded }) {
+export function simulate({ experiment, first, second, indicatorAdded, concentrationA = 0.1, concentrationB = 0.1, volumeA = 25, volumeB = 25 }) {
+  const validInputs = [concentrationA, concentrationB, volumeA, volumeB].every(Number.isFinite) && concentrationA >= 0 && concentrationB >= 0 && volumeA > 0 && volumeB > 0;
+  const totalLitres = (volumeA + volumeB) / 1000;
+  const amountA = concentrationA * volumeA / 1000;
+  const amountB = concentrationB * volumeB / 1000;
+  const quantitySummary = validInputs ? `Sample A: ${amountA.toPrecision(3)} mol; Sample B: ${amountB.toPrecision(3)} mol; combined volume: ${(volumeA + volumeB).toPrecision(4)} mL.` : null;
+  const excessMoles = first?.type === 'acid' ? amountA - amountB : amountB - amountA;
+  const estimatedPH = !validInputs ? null : Math.abs(excessMoles) < 1e-15 ? 7 : excessMoles > 0 ? -Math.log10(excessMoles / totalLitres) : 14 + Math.log10(-excessMoles / totalLitres);
   if (!first || !second) {
     return {
       title: "Ready for a sample",
@@ -54,6 +61,8 @@ export function simulate({ experiment, first, second, indicatorAdded }) {
       status: "Modeled reaction",
       color: "#d5c9f5",
       equation: "HCl + NaOH → NaCl + H₂O",
+      calculation: validInputs ? quantitySummary : "Enter non-negative concentrations and positive volumes to calculate an estimate.",
+      finalPH: estimatedPH,
     };
   }
   if (
