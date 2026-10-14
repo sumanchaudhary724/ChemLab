@@ -46,6 +46,9 @@ export function simulate({ experiment, first, second, indicatorAdded, concentrat
       status: "Observation recorded",
       color: colors[sample.type] || "#8aa6b8",
       equation: "Indicator color ↔ pH range",
+      reactionType: "indicator",
+      reactants: [sample.name],
+      products: ["Observed indicator color"],
     };
   }
   if (
@@ -61,8 +64,24 @@ export function simulate({ experiment, first, second, indicatorAdded, concentrat
       status: "Modeled reaction",
       color: "#d5c9f5",
       equation: "HCl + NaOH → NaCl + H₂O",
+      reactionType: "neutralization",
+      reactants: ["HCl", "NaOH"],
+      products: ["NaCl", "H₂O"],
       calculation: validInputs ? quantitySummary : "Enter non-negative concentrations and positive volumes to calculate an estimate.",
       finalPH: estimatedPH,
+    };
+  }
+  if ((first.type === "salt" && second.type === "base") || (first.type === "base" && second.type === "salt")) {
+    return {
+      title: "Precipitation reaction model",
+      observation: "The model represents copper(II) hydroxide forming as a blue precipitate when copper(II) sulfate solution is combined with sodium hydroxide.",
+      detail: "A precipitate is an insoluble solid that forms in a solution. The visual is illustrative and does not calculate precipitate mass.",
+      status: "Precipitate modeled",
+      color: "#5aa8ef",
+      equation: "CuSO₄ + 2NaOH → Cu(OH)₂(s) + Na₂SO₄",
+      reactionType: "precipitate",
+      reactants: ["CuSO₄", "NaOH"],
+      products: ["Cu(OH)₂ solid", "Na₂SO₄"],
     };
   }
   if (
@@ -77,7 +96,10 @@ export function simulate({ experiment, first, second, indicatorAdded, concentrat
         "Do not use this prototype to plan or perform real chemical experiments.",
       status: "Modeled reaction",
       color: "#f0d3a5",
-      equation: "Acid + carbonate → salt + water + CO₂",
+      equation: "2HCl + Na₂CO₃ → 2NaCl + H₂O + CO₂",
+      reactionType: "gas",
+      reactants: ["HCl", "Na₂CO₃"],
+      products: ["NaCl", "H₂O", "CO₂ gas"],
     };
   }
   return {
@@ -88,5 +110,8 @@ export function simulate({ experiment, first, second, indicatorAdded, concentrat
     status: "Mixture",
     color: first.color,
     equation: "No modeled equation",
+    reactionType: "mixture",
+    reactants: [first.formula || first.name, second.formula || second.name],
+    products: ["No new product modeled"],
   };
 }
