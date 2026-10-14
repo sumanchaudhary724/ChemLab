@@ -58,7 +58,7 @@ export function simulate({ experiment, first, second, indicatorAdded, concentrat
     return {
       title: "Neutralization model",
       observation:
-        "The model represents an acid–base neutralization. The final pH depends on amounts and concentrations, which this starter demo does not calculate.",
+        "The model represents an acid–base neutralization. The simplified estimate uses the entered concentrations and volumes to estimate excess strong acid or base. It assumes ideal behavior.",
       detail:
         "For a simplified strong acid–strong base reaction, hydrogen ions and hydroxide ions form water.",
       status: "Modeled reaction",
