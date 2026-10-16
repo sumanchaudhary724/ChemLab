@@ -46,6 +46,11 @@ export function simulate({ experiment, first, second, indicatorAdded, concentrat
       status: "Observation recorded",
       color: colors[sample.type] || "#8aa6b8",
       equation: "Indicator color ↔ pH range",
+      reactionName: "Universal indicator response",
+      formulaNote: "An indicator changes colour across a pH range; this is not a single balanced chemical reaction.",
+      reactionType: "indicator",
+      reactants: [sample.name],
+      products: ["Observed indicator color"],
     };
   }
   if (
@@ -55,14 +60,36 @@ export function simulate({ experiment, first, second, indicatorAdded, concentrat
     return {
       title: "Neutralization model",
       observation:
-        "The model represents an acid–base neutralization. The final pH depends on amounts and concentrations, which this starter demo does not calculate.",
+        "The model represents an acid–base neutralization. The simplified estimate uses the entered concentrations and volumes to estimate excess strong acid or base. It assumes ideal behavior.",
       detail:
         "For a simplified strong acid–strong base reaction, hydrogen ions and hydroxide ions form water.",
       status: "Modeled reaction",
       color: "#d5c9f5",
-      equation: "HCl + NaOH → NaCl + H₂O",
+      equation: "HCl(aq) + NaOH(aq) → NaCl(aq) + H₂O(l)",
+      ionicEquation: "H⁺(aq) + OH⁻(aq) → H₂O(l)",
+      reactionName: "Acid–base neutralisation",
+      formulaNote: "Molecular equation shown above; the net ionic equation shows hydrogen ions combining with hydroxide ions to form water.",
+      reactionType: "neutralization",
+      reactants: ["HCl", "NaOH"],
+      products: ["NaCl", "H₂O"],
       calculation: validInputs ? quantitySummary : "Enter non-negative concentrations and positive volumes to calculate an estimate.",
       finalPH: estimatedPH,
+    };
+  }
+  if ((first.type === "salt" && second.type === "base") || (first.type === "base" && second.type === "salt")) {
+    return {
+      title: "Precipitation reaction model",
+      observation: "The model represents copper(II) hydroxide forming as a blue precipitate when copper(II) sulfate solution is combined with sodium hydroxide.",
+      detail: "A precipitate is an insoluble solid that forms in a solution. The visual is illustrative and does not calculate precipitate mass.",
+      status: "Precipitate modeled",
+      color: "#5aa8ef",
+      equation: "CuSO₄(aq) + 2NaOH(aq) → Cu(OH)₂(s) + Na₂SO₄(aq)",
+      ionicEquation: "Cu²⁺(aq) + 2OH⁻(aq) → Cu(OH)₂(s)",
+      reactionName: "Precipitation: copper(II) hydroxide",
+      formulaNote: "(aq) means dissolved in water; (s) means solid. The blue solid is copper(II) hydroxide.",
+      reactionType: "precipitate",
+      reactants: ["CuSO₄", "NaOH"],
+      products: ["Cu(OH)₂ solid", "Na₂SO₄"],
     };
   }
   if (
@@ -77,7 +104,13 @@ export function simulate({ experiment, first, second, indicatorAdded, concentrat
         "Do not use this prototype to plan or perform real chemical experiments.",
       status: "Modeled reaction",
       color: "#f0d3a5",
-      equation: "Acid + carbonate → salt + water + CO₂",
+      equation: "2HCl(aq) + Na₂CO₃(aq) → 2NaCl(aq) + H₂O(l) + CO₂(g)",
+      ionicEquation: "2H⁺(aq) + CO₃²⁻(aq) → H₂O(l) + CO₂(g)",
+      reactionName: "Acid–carbonate reaction",
+      formulaNote: "(g) means gas. Carbon dioxide gas causes the bubbling represented by the animation.",
+      reactionType: "gas",
+      reactants: ["HCl", "Na₂CO₃"],
+      products: ["NaCl", "H₂O", "CO₂ gas"],
     };
   }
   return {
@@ -88,5 +121,10 @@ export function simulate({ experiment, first, second, indicatorAdded, concentrat
     status: "Mixture",
     color: first.color,
     equation: "No modeled equation",
+    reactionName: "Physical mixture",
+    formulaNote: "No balanced reaction formula is provided because this sample pair has no specific reaction in the model.",
+    reactionType: "mixture",
+    reactants: [first.formula || first.name, second.formula || second.name],
+    products: ["No new product modeled"],
   };
 }
